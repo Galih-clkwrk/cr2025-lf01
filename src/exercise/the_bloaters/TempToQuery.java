@@ -1,5 +1,4 @@
 package exercise.the_bloaters;
-
 public class TempToQuery {
 	class Product {
 		private int quantity;
@@ -11,15 +10,20 @@ public class TempToQuery {
 		
 		// TODO: change this method to using replace temp with query
 		public double getPrice() {
-			int basePrice = quantity * itemPrice;
-			double discountFactor;
-			if (basePrice > 1000) {
-				discountFactor = 0.95;
-				}
+			return getBasePrice() * getDiscountFactor();
+		}
+		
+		private int getBasePrice() {
+			return quantity * itemPrice;
+		}
+		
+		private double getDiscountFactor() {
+			if (getBasePrice() > 1000) {
+				return 0.95;
+			}
 			else {
-				discountFactor = 0.98;
-				}
-			return basePrice * discountFactor;
+				return 0.98;
+			}
 		}
 	}
 	public void Test() {
