@@ -2,38 +2,48 @@ package exercise.the_bloaters;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
-
-
 public class ParameterizeObject {
 	// TODO: change the logic of Date start & Date end of this Account class by
 	//       introduce parameter object
 	class Account {
 		  // ...
-		  private Vector transactions = new Vector();
+		  private Vector<Transaction> transactions = new Vector<>();
 		  public Account() {
 			  transactions.add(new Transaction(1000, new Date(1000)));
 			  transactions.add(new Transaction(1200, new Date(1100)));
 			  transactions.add(new Transaction(1500, new Date(1200)));
 			  transactions.add(new Transaction(1300, new Date(1300)));
 		  }
-
-		  public double getFlowBetween(Date start, Date end) {
+		  public double getFlowBetween(DateRange dateRange) {
 		    double result = 0;
-		    Enumeration e = transactions.elements();
+		    Enumeration<Transaction> e = transactions.elements();
 		    while (e.hasMoreElements()) {
-		      Transaction each = (Transaction) e.nextElement();
-		      if (each.getDate().compareTo(start) >= 0 && each.getDate().compareTo(end) <= 0) {
+		      Transaction each = e.nextElement();
+		      if (dateRange.includes(each.getDate())) {
 		        result += each.getValue();
 		      }
 		    }
 		    return result;
 		  }
 		}
-
+		
+		class DateRange {
+	        private Date start;
+	        private Date end;
+	
+	        public DateRange(Date start, Date end) {
+	            this.start = start;
+	            this.end = end;
+	        }
+	
+	        public boolean includes(Date date) {
+	            return date.compareTo(start) >= 0 && date.compareTo(end) <= 0;
+	        }
+	    }
+	
 		class Transaction {
 		  private Date chargeDate;
 		  private double value;
-
 		  public Transaction(double value, Date chargeDate) {
 		    this.value = value;
 		    this.chargeDate = chargeDate;
@@ -45,12 +55,10 @@ public class ParameterizeObject {
 		    return value;
 		  }
 		}
-
 	private void test() {
 		Account account = new Account();
-		Date startDate = new Date(1050);
-		Date endDate = new Date(1250);
-		double flow = account.getFlowBetween(startDate, endDate);
+		DateRange dateRange = new DateRange(new Date(1050), new Date(1250));
+		double flow = account.getFlowBetween(dateRange);
 		System.out.println(flow);
 		
 	}
@@ -58,5 +66,4 @@ public class ParameterizeObject {
 		ParameterizeObject p = new ParameterizeObject();
 		p.test();
 	}
-
 }
