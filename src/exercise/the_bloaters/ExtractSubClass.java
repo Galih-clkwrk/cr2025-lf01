@@ -1,32 +1,51 @@
-﻿package exercise.the_bloaters;
+package exercise.the_bloaters;
 public class ExtractSubClass {
-// todo: extract subclass PartsItem & LaborItem from JobItem
-	class JobItem {
+	abstract class JobItem {
 	  private int quantity;
-	  private int unitPrice;
-	  private Employee employee;
-	  private boolean isLabor;
-
-	  public JobItem(int quantity, int unitPrice, boolean isLabor, Employee employee) {
-		this.quantity = quantity;
-		this.unitPrice = unitPrice;
-		this.isLabor = isLabor;
-		this.employee = employee;
-	  }
+	  
+	  public JobItem(int quantity) {
+		    this.quantity = quantity;
+		}
 	  public int getTotalPrice() {
 		return quantity * getUnitPrice();
 	  }
 	  public int getQuantity() {
 		return quantity;
 	  }
-	  public int getUnitPrice() {
-		return (isLabor) ? employee.getRate() : unitPrice;
-	  }
+	  public abstract int getUnitPrice();
 	  public Employee getEmployee() {
-		return employee;
+		return null;
 	  }
 	}
-
+	
+	class LaborItem extends JobItem {
+		private Employee employee;
+		public LaborItem(int quantity, Employee employee) {
+			super(quantity);
+			this.employee = employee;
+		}
+		@Override
+		public int getUnitPrice() {
+			return employee.getRate();
+		}
+		@Override
+		public Employee getEmployee() {
+			return employee;
+		}
+	}
+	
+	class PartsItem extends JobItem {
+		private int unitPrice;
+		public PartsItem(int quantity, int unitPrice) {
+			super(quantity);
+			this.unitPrice = unitPrice;
+		}
+		@Override
+		public int getUnitPrice() {
+			return unitPrice;
+		}
+	}
+	
 	class Employee {
 	  private int rate;
 	  public Employee(int rate) {
@@ -36,13 +55,15 @@ public class ExtractSubClass {
 		return rate;
 	  }
 	}
+	
 	public void action() {
 		Employee kent = new Employee(50);
-		JobItem j1 = new JobItem(5, 0, true, kent);
-		JobItem j2 = new JobItem(15, 10, false, null);
+		JobItem j1 = new LaborItem(5, kent);
+		JobItem j2 = new PartsItem(15, 10);
 		int total = j1.getTotalPrice() + j2.getTotalPrice();
 		System.out.println(total);
 	}
+	
 	public static void main(String[] args) {
 		new ExtractSubClass().action();
 	}
