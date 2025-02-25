@@ -1,9 +1,6 @@
 package exercise.the_bloaters;
 import java.util.Enumeration;
-
-
 public class ExtractMethod {
-
 	public static void main(String[] args) {
 		ExtractMethod test = new ExtractMethod("Andi");
 		test.printOwing();
@@ -17,23 +14,30 @@ public class ExtractMethod {
 		this.name = name;
 		orders = new Order();
 	}
-	// TODO: reduce this method with extract method
+	
 	void printOwing() {
-	  Enumeration elements = orders.elements();
-	  double outstanding = 0.0;
-
-	  // print banner
+	  printBanner();
+	  double outstanding = calculateOutstanding();
+	  printDetails(outstanding);
+	}
+	
+	private void printBanner() {
 	  System.out.println ("*****************************");
 	  System.out.println ("****** Customer totals ******");
 	  System.out.println ("*****************************");
-
-	  // print owings
+	}
+	
+	private double calculateOutstanding() {
+	  Enumeration elements = orders.elements();
+	  double outstanding = 0.0;
 	  while (elements.hasMoreElements()) {
 	    Order each = (Order) elements.nextElement();
 	    outstanding += each.getAmount();
 	  }
-
-	  // print details
+	  return outstanding;
+	}
+	
+	private void printDetails(double outstanding) {
 	  System.out.println("name: " + name);
 	  System.out.println("amount: " + outstanding);
 	}
@@ -57,19 +61,15 @@ public class ExtractMethod {
 			}
 			return false;
 		}
-
 		public Enumeration elements() {
 			return this;
 		}
-
 		public double getAmount() {
 			return amounts[currentIndex - 1];
 		}
-
 		public Object nextElement() {
 			currentIndex ++;
 			return this;
 		}
-		
 	}
 }
